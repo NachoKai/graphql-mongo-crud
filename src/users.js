@@ -1,4 +1,3 @@
-import { makeExecutableSchema } from "graphql-tools";
 const gql = require("graphql-tag");
 
 const typeDefs = gql`

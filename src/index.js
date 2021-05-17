@@ -19,7 +19,7 @@ app.use(
   graphqlHTTP({
     graphiql: true,
     schema,
-    // ctx: {
+    // context: {
     //   messageId: 1,
     // },
   })

@@ -1,51 +1,37 @@
-import { makeExecutableSchema } from "graphql-tools";
-import { resolvers } from "./resolvers";
+"use strict";
+const _ = require("lodash");
+const gql = require("graphql-tag");
+const { makeExecutableSchema } = require("graphql-tools");
+const { typeDefs: usersTypeDefs, resolvers: usersResolvers } = require("./users");
+const { typeDefs: tasksTypeDefs, resolvers: tasksResolvers } = require("./tasks");
+const { typeDefs: othersTypeDefs, resolvers: othersResolvers } = require("./others");
 
-const typeDefs = `
-    type Query {
-        hello: String!
-        greet(name: String!): String!
-        Tasks: [Task]
-        Users: [User]
-        getUser(_id: ID): User
-    }
+const typeDefs = gql`
+  type Query {
+    ping: String
+  }
 
-    type Task {
-        _id: ID
-        title: String!
-        description: String
-        number: Int
-    }
-    
-    type User {
-        _id: ID
-        firstName: String!
-        lastName: String!
-        age: Int
-    }
+  type Mutation {
+    _empty: String
+  }
 
-    type Mutation {
-        createTask(input: TaskInput): Task
-        createUser(input: UserInput): User
-        updateUser(_id: ID!, input: UserInput): User
-        deleteUser(_id: ID!): User
-    }
-
-    input TaskInput {
-        title: String!
-        description: String
-        number: Int
-    }
-
-    input UserInput {
-        firstName: String
-        lastName: String
-        age: Int
-    }
-
+  schema {
+    query: Query
+    mutation: Mutation
+  }
 `;
 
-export default makeExecutableSchema({
-  typeDefs,
-  resolvers,
+const resolvers = {
+  Query: {
+    ping() {
+      return "pong";
+    },
+  },
+};
+
+let schema = makeExecutableSchema({
+  typeDefs: [typeDefs, usersTypeDefs, tasksTypeDefs, othersTypeDefs],
+  resolvers: _.merge([resolvers, usersResolvers, tasksResolvers, othersResolvers]),
 });
+
+module.exports = schema;
